@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -12,12 +13,16 @@ import (
 	"time"
 )
 
+type Response struct {
+	Message string `json:"message"`
+}
+
 func main() {
 
 	serverMux := http.NewServeMux()
 	serverMux.HandleFunc("/sayHello", greet)
 
-	serverPort := 9090
+	serverPort := 8080
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%d", serverPort),
 		Handler: serverMux,
@@ -49,5 +54,15 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "Stranger"
 	}
-	fmt.Fprintf(w, "Hello, %s!\n", name)
+
+	data := Response{
+		Message: "Hello, " + name + "!",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
