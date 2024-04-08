@@ -21,6 +21,7 @@ func main() {
 
 	serverMux := http.NewServeMux()
 	serverMux.HandleFunc("/sayHello", greet)
+	serverMux.HandleFunc("/saluta", saluta)
 
 	serverPort := 8080
 	server := http.Server{
@@ -57,6 +58,24 @@ func greet(w http.ResponseWriter, r *http.Request) {
 
 	data := Response{
 		Message: "Hello, " + name + "!",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func saluta(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		name = "Stranger"
+	}
+
+	data := Response{
+		Message: "Ciao, " + name + "!",
 	}
 
 	w.Header().Set("Content-Type", "application/json")

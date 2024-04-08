@@ -25,6 +25,28 @@ paths:
                 $ref: '#/components/schemas/GreetResponseModel'
       deprecated: false
       security: []
+  /saluta:
+    get:
+      summary: Greet a person in italian
+      description: Greet a person in italian by name
+      tags:
+        - saluti
+      parameters:
+        - name: name
+          in: query
+          description: Name of the person to greet
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GreetResponseModel'
+      deprecated: false
+      security: []
 components:
   schemas:
     GreetResponseModel:
